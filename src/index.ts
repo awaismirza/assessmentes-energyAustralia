@@ -3,104 +3,9 @@ import {EndPoints} from "./constants/EndPoints.js";
 import orderBy from "lodash.orderby"
 import axios from "axios";
 
-let mockData: Festival[] = [
-    {
-        "name": "LOL-palooza",
-        "bands": [
-            {
-                "name": "Winter Primates",
-                "recordLabel": ""
-            },
-            {
-                "name": "Frank Jupiter",
-                "recordLabel": "Pacific Records"
-            },
-            {
-                "name": "Jill Black",
-                "recordLabel": "Fourth Woman Records"
-            },
-            {
-                "name": "Werewolf Weekday",
-                "recordLabel": "XS Recordings"
-            }
-        ]
-    },
-    {
-        "name": "Small Night In",
-        "bands": [
-            {
-                "name": "Squint-281",
-                "recordLabel": "Outerscope"
-            },
-            {
-                "name": "The Black Dashes",
-                "recordLabel": "Fourth Woman Records"
-            },
-            {
-                "name": "Green Mild Cold Capsicum",
-                "recordLabel": "Marner Sis. Recording"
-            },
-            {
-                "name": "Yanke East",
-                "recordLabel": "MEDIOCRE Music"
-            },
-            {
-                "name": "Wild Antelope",
-                "recordLabel": "Marner Sis. Recording"
-            }
-        ]
-    },
-    {
-        "name": "Trainerella",
-        "bands": [
-            {
-                "name": "Wild Antelope",
-                "recordLabel": "Still Bottom Records"
-            },
-            {
-                "name": "Manish Ditch",
-                "recordLabel": "ACR"
-            },
-            {
-                "name": "Adrian Venti",
-                "recordLabel": "Monocracy Records"
-            },
-            {
-                "name": "YOUKRANE",
-                "recordLabel": "Anti Records"
-            }
-        ]
-    },
-    {
-        "name": "Twisted Tour",
-        "bands": [
-            {
-                "name": "Squint-281"
-            },
-            {
-                "name": "Summon",
-                "recordLabel": "Outerscope"
-            },
-            {
-                "name": "Auditones",
-                "recordLabel": "Marner Sis. Recording"
-            }
-        ]
-    },
-    {
-        "bands": [
-            {
-                "name": "Critter Girls",
-                "recordLabel": "ACR"
-            },
-            {
-                "name": "Propeller",
-                "recordLabel": "Pacific Records"
-            }
-        ]
-    }
-];
-
+/**
+ * Load Festival data from API
+ */
 export async function fetchData(): Promise<Festival[]> {
     try {
         const response = await axios.get(EndPoints.GET_FESTIVALS);
@@ -110,6 +15,10 @@ export async function fetchData(): Promise<Festival[]> {
     }
 }
 
+/**
+ * Return Uniq bands
+ * @param data
+ */
 const getUniqueBands = (data: Festival[]): Set<string> => {
     const bands = new Set<string>();
     data.forEach(festival => {
@@ -121,7 +30,11 @@ const getUniqueBands = (data: Festival[]): Set<string> => {
     });
     return bands;
 };
-
+/**
+ * parsed Record Label
+ * @param data
+ * @param recordLabel
+ */
 const parseRecordLabel: (data: Festival[], recordLabel) => RecordLabel = (data: Festival[], recordLabel): RecordLabel => {
     let bands: ParsedBand[] = [];
     data.forEach((festival: Festival) => {
@@ -144,6 +57,9 @@ const parseRecordLabel: (data: Festival[], recordLabel) => RecordLabel = (data: 
     return {recordLabel, bands};
 }
 
+/*
+ * print Pased Record Label to the console
+ */
 const printRecordLabel: (labels: RecordLabel[]) => void = (labels: RecordLabel[]): void => {
     labels.forEach((label: RecordLabel) => {
         console.log(`Record Label ${label.recordLabel}`);
