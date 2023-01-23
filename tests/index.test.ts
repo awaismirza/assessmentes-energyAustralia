@@ -1,5 +1,5 @@
-import {Festival} from "../src/interfaces/festivals.interface";
-import {fetchData, parseRecordLabel, uniqueBands} from "../src";
+import {Festival, RecordLabel} from "../src/interfaces/festivals.interface";
+import {fetchData, parseRecordLabel, printRecordLabel, uniqueBands} from "../src";
 
 describe('index.ts', () => {
     describe('fetchData', () => {
@@ -29,20 +29,20 @@ describe('index.ts', () => {
         });
     });
     describe('getUniqueBands', () => {
-        it('should return a set of unique record labels',  () => {
+        it('should return a set of unique record labels', () => {
             const data: Festival[] = [
                 {
                     name: 'Festival 1',
                     bands: [
-                        { name: 'Band 1', recordLabel: 'Label 1' },
-                        { name: 'Band 2', recordLabel: 'Label 2' },
+                        {name: 'Band 1', recordLabel: 'Label 1'},
+                        {name: 'Band 2', recordLabel: 'Label 2'},
                     ],
                 },
                 {
                     name: 'Festival 2',
                     bands: [
-                        { name: 'Band 3', recordLabel: 'Label 1' },
-                        { name: 'Band 4', recordLabel: 'Label 3' },
+                        {name: 'Band 3', recordLabel: 'Label 1'},
+                        {name: 'Band 4', recordLabel: 'Label 3'},
                     ],
                 },
             ];
@@ -67,17 +67,17 @@ describe('index.ts', () => {
             {
                 name: 'Festival 1',
                 bands: [
-                    { name: 'Band 1', recordLabel: 'Label 1' },
-                    { name: 'Band 2', recordLabel: 'Label 2' },
-                    { name: 'Band 3', recordLabel: 'Label 1' },
-                    { name: 'Band 4', recordLabel: 'Label 3' },
+                    {name: 'Band 1', recordLabel: 'Label 1'},
+                    {name: 'Band 2', recordLabel: 'Label 2'},
+                    {name: 'Band 3', recordLabel: 'Label 1'},
+                    {name: 'Band 4', recordLabel: 'Label 3'},
                 ],
             },
             {
                 name: 'Festival 2',
                 bands: [
-                    { name: 'Band 3', recordLabel: 'Label 1' },
-                    { name: 'Band 4', recordLabel: 'Label 3' },
+                    {name: 'Band 3', recordLabel: 'Label 1'},
+                    {name: 'Band 4', recordLabel: 'Label 3'},
                 ],
             },
         ];
@@ -103,7 +103,7 @@ describe('index.ts', () => {
                         name: "Band 3"
                     }
                 ],
-                    recordLabel: "Label 1"
+                recordLabel: "Label 1"
             }
             expect(parseRecordLabel(data, 'Label 1')).toEqual(expected);
         });
@@ -112,5 +112,37 @@ describe('index.ts', () => {
             expect(parseRecordLabel(data, 'Label Not Found')).toEqual({recordLabel: 'Label Not Found', bands: []});
         });
     });
-
+    describe('printRecordLabel', () => {
+        const labels: RecordLabel[] = [
+            {
+                recordLabel: 'Label 1',
+                bands: [
+                    { name: 'Band 1', festivals: ['Festival 1'] },
+                    { name: 'Band 3', festivals: ['Festival 1', 'Festival 2'] },
+                ],
+            },
+            {
+                recordLabel: 'Label 2',
+                bands: [
+                    { name: 'Band 2', festivals: ['Festival 1'] },
+                    { name: 'Band 4', festivals: ['Festival 2'] },
+                ],
+            },
+        ];
+        it('should print the record labels and bands with festivals', () => {
+            const log = jest.spyOn(console, 'log').mockImplementation();
+            printRecordLabel(labels);
+            expect(log).toHaveBeenCalledWith('Record Label Label 1');
+            expect(log).toHaveBeenCalledWith('  Brand Band 1');
+            expect(log).toHaveBeenCalledWith('     Festival 1');
+            expect(log).toHaveBeenCalledWith('  Brand Band 3');
+            expect(log).toHaveBeenCalledWith('     Festival 1');
+            expect(log).toHaveBeenCalledWith('     Festival 2');
+            expect(log).toHaveBeenCalledWith('Record Label Label 2');
+            expect(log).toHaveBeenCalledWith('  Brand Band 2');
+            expect(log).toHaveBeenCalledWith('     Festival 1');
+            expect(log).toHaveBeenCalledWith('  Brand Band 4');
+            expect(log).toHaveBeenCalledWith('     Festival 2');
+        });
+    });
 });
