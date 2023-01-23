@@ -1,5 +1,6 @@
 import {Band, Festival, ParsedBand, RecordLabel} from "./interfaces/festivals.interface.js";
 import {EndPoints} from "./constants/EndPoints.js";
+import orderBy from "lodash.orderby"
 import axios from "axios";
 
 let mockData: Festival[] = [
@@ -122,7 +123,7 @@ const getUniqueBands = (data: Festival[]): Set<string> => {
 };
 
 const parseRecordLabel: (data: Festival[], recordLabel) => RecordLabel = (data: Festival[], recordLabel): RecordLabel => {
-    const bands: ParsedBand[] = [];
+    let bands: ParsedBand[] = [];
     data.forEach((festival: Festival) => {
         festival?.bands.forEach((band: Band) => {
             if (band.recordLabel === recordLabel) {
@@ -133,21 +134,24 @@ const parseRecordLabel: (data: Festival[], recordLabel) => RecordLabel = (data: 
                 if (festival.name !== undefined) {
                     val.festivals.push(festival?.name);
                 }
+
+                val.festivals = orderBy(val.festivals, 'name', 'asc')
                 bands.push(val);
             }
         })
     })
+    bands = orderBy(bands, 'name', 'asc');
     return {recordLabel, bands};
 }
 
 const printRecordLabel: (labels: RecordLabel[]) => void = (labels: RecordLabel[]): void => {
     labels.forEach((label: RecordLabel) => {
-        console.log(label.recordLabel);
+        console.log(`Record Label ${label.recordLabel}`);
         label.bands.forEach((band: ParsedBand) => {
-            console.log(`  ${band.name}`);
+            console.log(`  Brand ${band.name}`);
             if (band.festivals.length > 0) {
                 band.festivals.forEach((festival: string) => {
-                    console.log(`    ${festival}`);
+                    console.log(`     ${festival}`);
                 })
             }
         })
@@ -167,7 +171,7 @@ fetchData()
             let label: RecordLabel = parseRecordLabel(data, val);
             recordLabel.push(label);
         });
-        return recordLabel;
+        return orderBy(recordLabel, 'recordLabel', 'asc');
 
     })
     .then((labels: RecordLabel[]) => {

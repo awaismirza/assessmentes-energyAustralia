@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon ./src/index.ts",
-    "start": "tsc && node dist/index.js",
+    "prestart": "tsc",
+    "start": "node ./dist/index.js",
     "build": "tsc",
     "test": "jest"
   },
@@ -17,6 +18,7 @@
     "typescript": "^4.9.3"
   },
   "dependencies": {
-    "axios": "^1.2.3"
+    "axios": "^1.2.3",
+    "lodash.orderby": "^4.6.0"
   }
 }
