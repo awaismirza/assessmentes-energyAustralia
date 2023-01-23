@@ -26,7 +26,7 @@ To run application, use the command
 
 `npm run start`
 
-. This will start a development server and you can access the application on http://localhost:3000/
+#### You will see the results in the terminal window
 
 ### Building the app
 
