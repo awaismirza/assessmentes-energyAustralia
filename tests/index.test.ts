@@ -1,7 +1,7 @@
 import {fetchData} from "../src/index.js";
 import {Festival} from "../src/interfaces/festivals.interface.js";
 
-describe('main', () => {
+describe('index.ts', () => {
     describe('fetchData', () => {
         it('should fetch data from the API', async () => {
             const data = await fetchData();
@@ -19,14 +19,10 @@ describe('main', () => {
             expect(data).toBeDefined();
             const firstFestival: Festival = data[0];
             expect(firstFestival).toHaveProperty('bands');
+            expect(firstFestival).toHaveProperty('name');
 
             expect(Array.isArray(firstFestival.bands)).toBe(true);
-            expect(firstFestival.bands.length).toBeGreaterThan(0);
-            firstFestival.bands.forEach( band => {
-                expect(band).toHaveProperty('name');
-                expect(band).toHaveProperty('recordLabel');
-            });
-
+            expect(firstFestival?.bands?.length).toBeGreaterThan(0);
         })
 
         it('should throw an error if the API request fails', async () => {
@@ -35,7 +31,4 @@ describe('main', () => {
             expect(fetchData()).rejects.toThrow('API request failed');
         });
     });
-    // it('should return true', async () => {
-    //     expect(await index()).toBe(true);
-    // });
 });

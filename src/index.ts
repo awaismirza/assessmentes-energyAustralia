@@ -11,7 +11,7 @@ export async function fetchData(): Promise<Festival[]> {
         const response = await axios.get(EndPoints.GET_FESTIVALS);
         return response.data;
     } catch (e: any) {
-        throw new Error('API reqest failed');
+        throw new Error('API request failed');
     }
 }
 
