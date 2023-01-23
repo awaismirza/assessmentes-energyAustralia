@@ -11,7 +11,7 @@ export async function fetchData(): Promise<Festival[]> {
         const response = await axios.get(EndPoints.GET_FESTIVALS);
         return response.data;
     } catch (e: any) {
-        throw new Error('API request failed');
+        throw new Error('API request failed - Please rerun npm run start in terminal');
     }
 }
 
@@ -19,14 +19,16 @@ export async function fetchData(): Promise<Festival[]> {
  * Return Uniq bands
  * @param data
  */
-const getUniqueBands = (data: Festival[]): Set<string> => {
+export function uniqueBands(data: Festival[]): Set<string> {
     const bands = new Set<string>();
     data.forEach(festival => {
-        festival.bands.forEach(band => {
-            if (band?.recordLabel?.length > 0) {
-                bands.add(band.recordLabel);
-            }
-        });
+        if(festival.bands && festival.bands.length > 0) {
+            festival.bands.forEach(band => {
+                if (band?.recordLabel?.length > 0) {
+                    bands.add(band.recordLabel);
+                }
+            });
+        }
     });
     return bands;
 };
@@ -35,7 +37,7 @@ const getUniqueBands = (data: Festival[]): Set<string> => {
  * @param data
  * @param recordLabel
  */
-const parseRecordLabel: (data: Festival[], recordLabel) => RecordLabel = (data: Festival[], recordLabel): RecordLabel => {
+export function parseRecordLabel(data: Festival[], recordLabel): RecordLabel {
     let bands: ParsedBand[] = [];
     data.forEach((festival: Festival) => {
         festival?.bands.forEach((band: Band) => {
@@ -60,7 +62,7 @@ const parseRecordLabel: (data: Festival[], recordLabel) => RecordLabel = (data: 
 /*
  * print Pased Record Label to the console
  */
-const printRecordLabel: (labels: RecordLabel[]) => void = (labels: RecordLabel[]): void => {
+export function printRecordLabel(labels: RecordLabel[]): void {
     labels.forEach((label: RecordLabel) => {
         console.log(`Record Label ${label.recordLabel}`);
         label.bands.forEach((band: ParsedBand) => {
@@ -82,7 +84,7 @@ fetchData()
             throw Error('No Data Found')
         }
         const recordLabel: RecordLabel[] = [];
-        const uniqBands = getUniqueBands(data);
+        const uniqBands = uniqueBands(data);
         uniqBands.forEach((val: string) => {
             let label: RecordLabel = parseRecordLabel(data, val);
             recordLabel.push(label);
